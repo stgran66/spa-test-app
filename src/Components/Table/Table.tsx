@@ -2,9 +2,13 @@ import { Product } from '../../App';
 
 interface TableProps {
   items: Array<Product>;
+  filter: string;
 }
 
-export const Table = ({ items }: TableProps) => {
+export const Table = ({ items, filter }: TableProps) => {
+  const filteredItems = items.filter((item) =>
+    item.id.toFixed().includes(filter)
+  );
   return (
     <table style={{ margin: 'auto' }}>
       <thead>
@@ -15,7 +19,7 @@ export const Table = ({ items }: TableProps) => {
         </tr>
       </thead>
       <tbody>
-        {items.map((item: Product) => {
+        {filteredItems.map((item: Product) => {
           return (
             <tr key={item.id} style={{ backgroundColor: item.color }}>
               <td>{item.id}</td>

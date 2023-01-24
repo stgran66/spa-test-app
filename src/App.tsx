@@ -15,8 +15,9 @@ export interface Product {
 function App() {
   const [products, setProducts] = useState<null | Array<Product>>(null);
   const [page, setPage] = useState<number>(1);
-  const [perPage, setPerPage] = useState<number>(5);
+  const [perPage] = useState<number>(5);
   const [total, setTotal] = useState<number>(0);
+  const [filter, setFilter] = useState<string>('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -26,7 +27,7 @@ function App() {
       setProducts(response.data);
     };
     fetchData();
-  }, [page, total]);
+  }, [page, total, perPage]);
 
   const increasePage = () => {
     setPage(page + 1);
@@ -36,10 +37,14 @@ function App() {
     setPage(page - 1);
   };
 
+  const handleInput = (evt: React.ChangeEvent<HTMLInputElement>) => {
+    setFilter(evt.target.value);
+  };
+
   return (
     <div className='App' style={{ textAlign: 'center' }}>
-      <Filter />
-      {products && <Table items={products} />}
+      <Filter filter={filter} handleInput={handleInput} />
+      {products && <Table items={products} filter={filter} />}
       {products && (
         <Pagination
           pages={Math.ceil(total / perPage)}

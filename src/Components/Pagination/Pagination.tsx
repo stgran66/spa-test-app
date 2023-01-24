@@ -11,7 +11,6 @@ export const Pagination = ({
   page,
   pages,
 }: PaginationProps) => {
-  console.log(pages);
   return (
     <div>
       <button
