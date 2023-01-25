@@ -3,10 +3,10 @@ import { Routes, Route } from 'react-router-dom';
 import { useSearchParams } from 'react-router-dom';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
-import { Filter } from './Components/Filter/Filter';
-import { ProductsTable } from './Components/Table/Table';
-import { Pagination } from './Components/Pagination/Pagination';
-import { getData } from './services/api';
+import { Filter } from './Filter/Filter';
+import { ProductsTable } from './Table/Table';
+import { Pagination } from './Pagination/Pagination';
+import { getData } from '../services/api';
 
 export interface Product {
   id: number;

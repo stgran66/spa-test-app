@@ -7,7 +7,7 @@ import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 
-import { Product } from '../../App';
+import { Product } from '../App';
 
 interface ModalProps {
   onClose: Function;
@@ -28,7 +28,11 @@ export const Modal = ({ onClose, item }: ModalProps) => {
   }, [onClose]);
 
   return ReactDOM.createPortal(
-    <Backdrop open={true} onClick={() => onClose()}>
+    <Backdrop
+      sx={{ backgroundColor: 'rgba(0,0,0,0.9)' }}
+      open={true}
+      onClick={() => onClose()}
+    >
       <Table
         sx={{ maxWidth: 450, height: 'fit-content' }}
         onClick={(evt) => {

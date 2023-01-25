@@ -7,7 +7,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
-import { Product } from '../../App';
+import { Product } from '../App';
 import { Modal } from '../Modal/Modal';
 
 interface TableProps {
