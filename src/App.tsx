@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import { Routes, Route } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { Filter } from './Components/Filter/Filter';
 import { Table } from './Components/Table/Table';
 import { Pagination } from './Components/Pagination/Pagination';
@@ -13,11 +15,15 @@ export interface Product {
 }
 
 function App() {
+  const [searchParams, setSearchParams] = useSearchParams({ filter: '' });
+  const queryFilter = searchParams.get('filter');
+  const queryPage = Number(searchParams.get('page'));
+
   const [products, setProducts] = useState<null | Array<Product>>(null);
-  const [page, setPage] = useState<number>(1);
+  const [page, setPage] = useState<number>(queryPage ? queryPage : 1);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [total, setTotal] = useState<number>(0);
-  const [filter, setFilter] = useState<string>('');
+  const [filter, setFilter] = useState<string>(queryFilter!);
 
   const PER_PAGE: number = 5;
 
@@ -53,27 +59,47 @@ function App() {
     document.querySelector('body')!.style.overflow = 'visible';
   };
 
+  useEffect(() => {
+    setSearchParams({ filter: filter, page: String(page) });
+  }, [filter, page, setSearchParams]);
+
   return (
-    <div className='App' style={{ textAlign: 'center' }}>
-      <Filter filter={filter} handleInput={handleInput} />
-      {products && (
-        <Table
-          items={products}
-          filter={filter}
-          onClose={closeModal}
-          onOpen={openModal}
-          showModal={showModal}
-        />
-      )}
-      {products && (
-        <Pagination
-          pages={Math.ceil(total / PER_PAGE)}
-          page={page}
-          onDecrease={decreasePage}
-          onIncrease={increasePage}
-        />
-      )}
-    </div>
+    <Routes>
+      <Route
+        path='/'
+        element={
+          <div className='App' style={{ textAlign: 'center' }}>
+            <Filter filter={filter} handleInput={handleInput} />
+            {products && (
+              <Table
+                items={products}
+                filter={filter}
+                onClose={closeModal}
+                onOpen={openModal}
+                showModal={showModal}
+              />
+            )}
+            {products && (
+              <Pagination
+                pages={Math.ceil(total / PER_PAGE)}
+                page={page}
+                onDecrease={decreasePage}
+                onIncrease={increasePage}
+              />
+            )}
+          </div>
+        }
+      />
+      <Route
+        path='*'
+        element={
+          <div style={{ textAlign: 'center' }}>
+            <h1>404 Not found</h1>
+            <h2>Please check if url is correct</h2>
+          </div>
+        }
+      />
+    </Routes>
   );
 }
 
