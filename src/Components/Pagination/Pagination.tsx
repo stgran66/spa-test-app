@@ -1,3 +1,7 @@
+import IconButton from '@mui/material/Button';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+
 interface PaginationProps {
   onDecrease: Function;
   onIncrease: Function;
@@ -13,20 +17,20 @@ export const Pagination = ({
 }: PaginationProps) => {
   return (
     <div>
-      <button
+      <IconButton
         type={'button'}
         onClick={() => onDecrease()}
         disabled={page === 1}
       >
-        Prev
-      </button>
-      <button
+        <ArrowBackIosNewIcon />
+      </IconButton>
+      <IconButton
         type={'button'}
         onClick={() => onIncrease()}
         disabled={page === pages}
       >
-        Next
-      </button>
+        <ArrowForwardIosIcon />
+      </IconButton>
     </div>
   );
 };

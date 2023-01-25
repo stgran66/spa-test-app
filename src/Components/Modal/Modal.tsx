@@ -1,5 +1,12 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import ReactDOM from 'react-dom';
+import Backdrop from '@mui/material/Backdrop';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+
 import { Product } from '../../App';
 
 interface ModalProps {
@@ -21,40 +28,36 @@ export const Modal = ({ onClose, item }: ModalProps) => {
   }, [onClose]);
 
   return ReactDOM.createPortal(
-    <div
-      style={{
-        backgroundColor: 'rgba(0, 0, 0, 0.4)',
-        padding: '20px',
-        position: 'fixed',
-        left: '0',
-        top: '0',
-        height: '100vh',
-        width: '100vw',
-        display: 'flex',
-        justifyContent: 'center',
-      }}
-      onClick={() => onClose()}
-    >
-      <table
-        style={{ backgroundColor: item!.color }}
-        onClick={(evt) => evt.stopPropagation()}
+    <Backdrop open={true} onClick={() => onClose()}>
+      <Table
+        sx={{ maxWidth: 450, height: 'fit-content' }}
+        onClick={(evt) => {
+          evt.stopPropagation();
+        }}
       >
-        <thead>
-          <tr>
+        <TableHead>
+          <TableRow
+            sx={{ backgroundColor: '#1976D2', '& th': { color: '#fff' } }}
+          >
             {Object.keys(item!).map((key) => (
-              <td key={key}>{key}</td>
+              <TableCell key={key} align='left'>
+                {key}
+              </TableCell>
             ))}
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
+          </TableRow>
+        </TableHead>
+
+        <TableBody>
+          <TableRow sx={{ backgroundColor: item!.color }}>
             {Object.values(item!).map((value) => (
-              <td key={value}>{value}</td>
+              <TableCell key={value} align='left'>
+                {value}
+              </TableCell>
             ))}
-          </tr>
-        </tbody>
-      </table>
-    </div>,
+          </TableRow>
+        </TableBody>
+      </Table>
+    </Backdrop>,
     document.getElementById('root')!
   );
 };

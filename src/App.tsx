@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { useSearchParams } from 'react-router-dom';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 import { Filter } from './Components/Filter/Filter';
-import { Table } from './Components/Table/Table';
+import { ProductsTable } from './Components/Table/Table';
 import { Pagination } from './Components/Pagination/Pagination';
 import { getData } from './services/api';
 
@@ -24,18 +26,29 @@ function App() {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [total, setTotal] = useState<number>(0);
   const [filter, setFilter] = useState<string>(queryFilter!);
+  const [error, setError] = useState<string | null>(null);
 
   const PER_PAGE: number = 5;
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await getData(page, PER_PAGE);
+      try {
+        const response = await getData(filter, page, PER_PAGE);
+        setError(null);
 
-      setTotal(response.total);
-      setProducts(response.data);
+        setTotal(response.total);
+        if (!response.data.length) {
+          setProducts([response.data]);
+          return;
+        }
+        setProducts(response.data);
+      } catch (err: any) {
+        setProducts(null);
+        setError(err.message);
+      }
     };
     fetchData();
-  }, [page, total, PER_PAGE]);
+  }, [page, total, PER_PAGE, filter]);
 
   const increasePage = () => {
     setPage(page + 1);
@@ -45,8 +58,12 @@ function App() {
     setPage(page - 1);
   };
 
-  const handleInput = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    setFilter(evt.target.value);
+  const handleSubmit = async (evt: React.SyntheticEvent) => {
+    evt.preventDefault();
+    const form = evt.target as typeof evt.target & {
+      filter: { value: string };
+    };
+    setFilter(form.filter.value);
   };
 
   const openModal = () => {
@@ -69,9 +86,9 @@ function App() {
         path='/'
         element={
           <div className='App' style={{ textAlign: 'center' }}>
-            <Filter filter={filter} handleInput={handleInput} />
+            <Filter filter={filter} handleSubmit={handleSubmit} />
             {products && (
-              <Table
+              <ProductsTable
                 items={products}
                 filter={filter}
                 onClose={closeModal}
@@ -86,6 +103,15 @@ function App() {
                 onDecrease={decreasePage}
                 onIncrease={increasePage}
               />
+            )}
+            {error && (
+              <Alert
+                severity='error'
+                sx={{ display: 'flex', justifyContent: 'center' }}
+              >
+                <AlertTitle>Error</AlertTitle>
+                {error}
+              </Alert>
             )}
           </div>
         }
