@@ -1,14 +1,28 @@
+import { useState } from 'react';
 import { Product } from '../../App';
+import { Modal } from '../Modal/Modal';
 
 interface TableProps {
   items: Array<Product>;
   filter: string;
+  onClose: Function;
+  onOpen: Function;
+  showModal: boolean;
 }
 
-export const Table = ({ items, filter }: TableProps) => {
+export const Table = ({
+  items,
+  filter,
+  showModal,
+  onOpen,
+  onClose,
+}: TableProps) => {
+  const [selectedProduct, setSelectedProduct] = useState<undefined | Product>();
+
   const filteredItems = items.filter((item) =>
     item.id.toFixed().includes(filter)
   );
+
   return (
     <table style={{ margin: 'auto' }}>
       <thead>
@@ -21,7 +35,14 @@ export const Table = ({ items, filter }: TableProps) => {
       <tbody>
         {filteredItems.map((item: Product) => {
           return (
-            <tr key={item.id} style={{ backgroundColor: item.color }}>
+            <tr
+              key={item.id}
+              style={{ backgroundColor: item.color }}
+              onClick={() => {
+                setSelectedProduct(item);
+                onOpen();
+              }}
+            >
               <td>{item.id}</td>
               <td>{item.name}</td>
               <td>{item.year}</td>
@@ -29,6 +50,7 @@ export const Table = ({ items, filter }: TableProps) => {
           );
         })}
       </tbody>
+      {showModal && <Modal onClose={onClose} item={selectedProduct} />}
     </table>
   );
 };
