@@ -6,7 +6,8 @@ import AlertTitle from '@mui/material/AlertTitle';
 import { Filter } from './Filter/Filter';
 import { ProductsTable } from './Table/Table';
 import { Pagination } from './Pagination/Pagination';
-import { getData } from '../services/api';
+import { fetchAllProducts } from '../redux/operations';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
 
 export interface Product {
   id: number;
@@ -21,42 +22,22 @@ function App() {
   const queryFilter = searchParams.get('filter');
   const queryPage = Number(searchParams.get('page'));
 
-  const [products, setProducts] = useState<null | Array<Product>>(null);
-  const [page, setPage] = useState<number>(queryPage ? queryPage : 1);
   const [showModal, setShowModal] = useState<boolean>(false);
-  const [total, setTotal] = useState<number>(0);
+
   const [filter, setFilter] = useState<string>(queryFilter!);
-  const [error, setError] = useState<string | null>(null);
+
+  const dispatch = useAppDispatch();
+  const isLoading = useAppSelector((state) => state.products.isLoading);
+  const error = useAppSelector((state) => state.products.error);
+  const products = useAppSelector((state) => state.products.items);
+  const page = useAppSelector((state) => state.products.page);
+  const total = useAppSelector((state) => state.products.total);
 
   const PER_PAGE: number = 5;
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await getData(filter, page, PER_PAGE);
-        setError(null);
-
-        setTotal(response.total);
-        if (!response.data.length) {
-          setProducts([response.data]);
-          return;
-        }
-        setProducts(response.data);
-      } catch (err: any) {
-        setProducts(null);
-        setError(err.message);
-      }
-    };
-    fetchData();
-  }, [page, total, PER_PAGE, filter]);
-
-  const increasePage = () => {
-    setPage(page + 1);
-  };
-
-  const decreasePage = () => {
-    setPage(page - 1);
-  };
+    dispatch(fetchAllProducts(page));
+  }, [dispatch, page]);
 
   const handleSubmit = async (evt: React.SyntheticEvent) => {
     evt.preventDefault();
@@ -89,20 +70,12 @@ function App() {
             <Filter filter={filter} handleSubmit={handleSubmit} />
             {products && (
               <ProductsTable
-                items={products}
                 onClose={closeModal}
                 onOpen={openModal}
                 showModal={showModal}
               />
             )}
-            {products && (
-              <Pagination
-                pages={Math.ceil(total / PER_PAGE)}
-                page={page}
-                onDecrease={decreasePage}
-                onIncrease={increasePage}
-              />
-            )}
+            {products && <Pagination />}
             {error && (
               <Alert
                 severity='error'

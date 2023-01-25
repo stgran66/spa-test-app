@@ -9,21 +9,17 @@ import Paper from '@mui/material/Paper';
 
 import { Product } from '../App';
 import { Modal } from '../Modal/Modal';
+import { useAppSelector } from '../../redux/hooks';
 
 interface TableProps {
-  items: Array<Product>;
   onClose: Function;
   onOpen: Function;
   showModal: boolean;
 }
 
-export const ProductsTable = ({
-  items,
-  showModal,
-  onOpen,
-  onClose,
-}: TableProps) => {
+export const ProductsTable = ({ showModal, onOpen, onClose }: TableProps) => {
   const [selectedProduct, setSelectedProduct] = useState<undefined | Product>();
+  const items = useAppSelector((state) => state.products.items);
 
   return (
     <TableContainer
