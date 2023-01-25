@@ -1,3 +1,4 @@
+import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { Product } from '../../App';
 
@@ -7,6 +8,18 @@ interface ModalProps {
 }
 
 export const Modal = ({ onClose, item }: ModalProps) => {
+  useEffect(() => {
+    const closeOnEsc = (evt: KeyboardEvent) => {
+      if (evt.code === 'Escape') {
+        onClose();
+      }
+    };
+    document.body.addEventListener('keydown', closeOnEsc);
+    return () => {
+      document.body.removeEventListener('keydown', closeOnEsc);
+    };
+  }, [onClose]);
+
   return ReactDOM.createPortal(
     <div
       style={{
@@ -23,7 +36,7 @@ export const Modal = ({ onClose, item }: ModalProps) => {
       onClick={() => onClose()}
     >
       <table
-        style={{ backgroundColor: 'green' }}
+        style={{ backgroundColor: item!.color }}
         onClick={(evt) => evt.stopPropagation()}
       >
         <thead>
