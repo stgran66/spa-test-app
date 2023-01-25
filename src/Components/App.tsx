@@ -90,7 +90,6 @@ function App() {
             {products && (
               <ProductsTable
                 items={products}
-                filter={filter}
                 onClose={closeModal}
                 onOpen={openModal}
                 showModal={showModal}

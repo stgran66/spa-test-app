@@ -23,12 +23,7 @@ export const Filter = ({ filter, handleSubmit }: FilterProps) => {
         autoComplete='off'
         onSubmit={(evt) => handleSubmit(evt)}
       >
-        <TextField
-          size='small'
-          label='outlined'
-          type={'number'}
-          name='filter'
-        />
+        <TextField size='small' label='Type id' type={'number'} name='filter' />
         <IconButton size='large' aria-label='search' type='submit'>
           <SearchIcon />
         </IconButton>

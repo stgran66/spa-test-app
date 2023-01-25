@@ -12,7 +12,6 @@ import { Modal } from '../Modal/Modal';
 
 interface TableProps {
   items: Array<Product>;
-  filter: string;
   onClose: Function;
   onOpen: Function;
   showModal: boolean;
@@ -20,7 +19,6 @@ interface TableProps {
 
 export const ProductsTable = ({
   items,
-  filter,
   showModal,
   onOpen,
   onClose,
@@ -58,6 +56,7 @@ export const ProductsTable = ({
               sx={{
                 '&:last-child td, &:last-child th': { border: 0 },
                 backgroundColor: item.color,
+                cursor: 'pointer',
               }}
               onClick={() => {
                 setSelectedProduct(item);
