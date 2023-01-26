@@ -3,13 +3,13 @@ import { Routes, Route } from 'react-router-dom';
 import { useSearchParams } from 'react-router-dom';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
+import Skeleton from '@mui/material/Skeleton';
 import { Filter } from './Filter/Filter';
 import { ProductsTable } from './Table/Table';
 import { Pagination } from './Pagination/Pagination';
 import { fetchAllProducts } from '../redux/operations';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { updateSearchParams } from '../redux/searchParamsSlice';
-import Skeleton from '@mui/material/Skeleton';
 
 export interface Product {
   id: number;

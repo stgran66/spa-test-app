@@ -64,32 +64,3 @@ export const ProductsTable = () => {
     </TableContainer>
   );
 };
-
-// <table style={{ margin: 'auto' }}>
-//   <thead>
-//     <tr>
-//       <td>Id</td>
-//       <td>Name</td>
-//       <td>Year</td>
-//     </tr>
-//   </thead>
-//   <tbody>
-//     {items.map((item: Product) => {
-//       return (
-//         <tr
-//           key={item.id}
-//           style={{ backgroundColor: item.color }}
-//           onClick={() => {
-//             setSelectedProduct(item);
-//             onOpen();
-//           }}
-//         >
-//           <td>{item.id}</td>
-//           <td>{item.name}</td>
-//           <td>{item.year}</td>
-//         </tr>
-//       );
-//     })}
-//   </tbody>
-//   {showModal && <Modal onClose={onClose} item={selectedProduct} />}
-// </table>

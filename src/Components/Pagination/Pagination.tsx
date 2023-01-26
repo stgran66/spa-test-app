@@ -7,7 +7,7 @@ import { updatePage } from '../../redux/searchParamsSlice';
 
 export const Pagination = () => {
   const dispatch = useAppDispatch();
-  const page: string = useAppSelector((state) => state.searchParams.page);
+  const page = useAppSelector((state) => state.searchParams.page);
   const total = useAppSelector((state) => state.products.total);
 
   return (

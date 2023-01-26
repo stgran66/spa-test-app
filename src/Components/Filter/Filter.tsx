@@ -10,6 +10,7 @@ export const Filter = () => {
 
   const handleSubmit = async (evt: React.SyntheticEvent) => {
     evt.preventDefault();
+
     const form = evt.target as typeof evt.target & {
       filter: { value: string };
     };
@@ -20,7 +21,6 @@ export const Filter = () => {
   return (
     <div>
       <p style={{ fontFamily: 'roboto', fontSize: '20px' }}>Search by Id</p>
-
       <Box
         component='form'
         sx={{
