@@ -6,26 +6,13 @@ export const PER_PAGE = 5;
 
 export const fetchAllProducts = createAsyncThunk(
   'products/fetchAll',
-  async (page: number, thunkAPI) => {
+  async (
+    queryParams: { page: string; id: string; per_page: string },
+    thunkAPI
+  ) => {
     try {
       const response = await axios.get('/', {
-        params: { per_page: PER_PAGE, page },
-      });
-      return response.data;
-    } catch (err: any) {
-      return thunkAPI.rejectWithValue(err.message);
-    }
-  }
-);
-
-export const fetchProductById = createAsyncThunk(
-  'products/fetchById',
-  async (id, thunkAPI) => {
-    try {
-      const response = await axios.get('/', {
-        params: {
-          id,
-        },
+        params: { ...queryParams },
       });
       return response.data;
     } catch (err: any) {

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { useSearchParams } from 'react-router-dom';
 import Alert from '@mui/material/Alert';
@@ -8,6 +8,8 @@ import { ProductsTable } from './Table/Table';
 import { Pagination } from './Pagination/Pagination';
 import { fetchAllProducts } from '../redux/operations';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import { updateSearchParams } from '../redux/searchParamsSlice';
+import Skeleton from '@mui/material/Skeleton';
 
 export interface Product {
   id: number;
@@ -18,48 +20,34 @@ export interface Product {
 }
 
 function App() {
-  const [searchParams, setSearchParams] = useSearchParams({ filter: '' });
-  const queryFilter = searchParams.get('filter');
-  const queryPage = Number(searchParams.get('page'));
-
-  const [showModal, setShowModal] = useState<boolean>(false);
-
-  const [filter, setFilter] = useState<string>(queryFilter!);
-
+  const [searchParams, setSearchParams] = useSearchParams();
   const dispatch = useAppDispatch();
   const isLoading = useAppSelector((state) => state.products.isLoading);
   const error = useAppSelector((state) => state.products.error);
   const products = useAppSelector((state) => state.products.items);
-  const page = useAppSelector((state) => state.products.page);
-  const total = useAppSelector((state) => state.products.total);
-
-  const PER_PAGE: number = 5;
-
-  useEffect(() => {
-    dispatch(fetchAllProducts(page));
-  }, [dispatch, page]);
-
-  const handleSubmit = async (evt: React.SyntheticEvent) => {
-    evt.preventDefault();
-    const form = evt.target as typeof evt.target & {
-      filter: { value: string };
-    };
-    setFilter(form.filter.value);
-  };
-
-  const openModal = () => {
-    setShowModal(true);
-    document.querySelector('body')!.style.overflow = 'hidden';
-  };
-
-  const closeModal = () => {
-    setShowModal(false);
-    document.querySelector('body')!.style.overflow = 'visible';
-  };
+  const page = useAppSelector((state) => state.searchParams.page);
+  const per_page = useAppSelector((state) => state.searchParams.per_page);
+  const filter = useAppSelector((state) => state.searchParams.filter);
 
   useEffect(() => {
-    setSearchParams({ filter: filter, page: String(page) });
-  }, [filter, page, setSearchParams]);
+    dispatch(
+      fetchAllProducts({ page: String(page), id: filter, per_page: per_page })
+    );
+  }, [dispatch, page, filter, per_page]);
+
+  useEffect(() => {
+    const newSearchParams: { [key: string]: string } = {};
+
+    Object.entries(searchParams).forEach(([key, value]) => {
+      newSearchParams[key] = value;
+    });
+
+    dispatch(updateSearchParams(newSearchParams as { [key: string]: string }));
+  }, [searchParams, dispatch]);
+
+  useEffect(() => {
+    setSearchParams({ filter: filter, page: page, per_page });
+  }, [page, filter, per_page, setSearchParams]);
 
   return (
     <Routes>
@@ -67,15 +55,17 @@ function App() {
         path='/'
         element={
           <div className='App' style={{ textAlign: 'center' }}>
-            <Filter filter={filter} handleSubmit={handleSubmit} />
-            {products && (
-              <ProductsTable
-                onClose={closeModal}
-                onOpen={openModal}
-                showModal={showModal}
+            <Filter />
+            {isLoading && (
+              <Skeleton
+                variant='rectangular'
+                width={450}
+                height={365}
+                sx={{ margin: 'auto' }}
               />
             )}
-            {products && <Pagination />}
+            {products.length >= 1 && <ProductsTable />}
+            {products.length >= 1 && <Pagination />}
             {error && (
               <Alert
                 severity='error'

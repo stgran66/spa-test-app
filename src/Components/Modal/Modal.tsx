@@ -6,32 +6,31 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+import { closeModal } from '../../redux/modalSlice';
 
-import { Product } from '../App';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 
-interface ModalProps {
-  onClose: Function;
-  item: Product | undefined;
-}
+export const Modal = () => {
+  const dispatch = useAppDispatch();
+  const item = useAppSelector((state) => state.modal.selectedProduct);
 
-export const Modal = ({ onClose, item }: ModalProps) => {
   useEffect(() => {
     const closeOnEsc = (evt: KeyboardEvent) => {
       if (evt.code === 'Escape') {
-        onClose();
+        dispatch(closeModal());
       }
     };
     document.body.addEventListener('keydown', closeOnEsc);
     return () => {
       document.body.removeEventListener('keydown', closeOnEsc);
     };
-  }, [onClose]);
+  }, [dispatch]);
 
   return ReactDOM.createPortal(
     <Backdrop
       sx={{ backgroundColor: 'rgba(0,0,0,0.9)' }}
       open={true}
-      onClick={() => onClose()}
+      onClick={() => dispatch(closeModal())}
     >
       <Table
         sx={{ maxWidth: 450, height: 'fit-content' }}

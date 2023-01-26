@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -6,20 +5,14 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-
-import { Product } from '../App';
+import { openModal } from '../../redux/modalSlice';
 import { Modal } from '../Modal/Modal';
-import { useAppSelector } from '../../redux/hooks';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 
-interface TableProps {
-  onClose: Function;
-  onOpen: Function;
-  showModal: boolean;
-}
-
-export const ProductsTable = ({ showModal, onOpen, onClose }: TableProps) => {
-  const [selectedProduct, setSelectedProduct] = useState<undefined | Product>();
+export const ProductsTable = () => {
+  const dispatch = useAppDispatch();
   const items = useAppSelector((state) => state.products.items);
+  const showModal = useAppSelector((state) => state.modal.isOpen);
 
   return (
     <TableContainer
@@ -55,8 +48,7 @@ export const ProductsTable = ({ showModal, onOpen, onClose }: TableProps) => {
                 cursor: 'pointer',
               }}
               onClick={() => {
-                setSelectedProduct(item);
-                onOpen();
+                dispatch(openModal(item));
               }}
             >
               <TableCell component='th' scope='row'>
@@ -68,7 +60,7 @@ export const ProductsTable = ({ showModal, onOpen, onClose }: TableProps) => {
           ))}
         </TableBody>
       </Table>
-      {showModal && <Modal onClose={onClose} item={selectedProduct} />}
+      {showModal && <Modal />}
     </TableContainer>
   );
 };

@@ -2,14 +2,21 @@ import IconButton from '@mui/material/Button';
 import SearchIcon from '@mui/icons-material/Search';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
+import { useAppDispatch } from '../../redux/hooks';
+import { updateSearchFilter } from '../../redux/searchParamsSlice';
 
-interface FilterProps {
-  filter: string;
+export const Filter = () => {
+  const dispatch = useAppDispatch();
 
-  handleSubmit: Function;
-}
+  const handleSubmit = async (evt: React.SyntheticEvent) => {
+    evt.preventDefault();
+    const form = evt.target as typeof evt.target & {
+      filter: { value: string };
+    };
 
-export const Filter = ({ filter, handleSubmit }: FilterProps) => {
+    dispatch(updateSearchFilter(form.filter.value));
+  };
+
   return (
     <div>
       <p style={{ fontFamily: 'roboto', fontSize: '20px' }}>Search by Id</p>

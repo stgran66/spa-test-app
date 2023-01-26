@@ -1,9 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { productsReducer } from './productsSlice';
+import { searchParamsReducer } from './searchParamsSlice';
+import { modalReducer } from './modalSlice';
 
 export const store = configureStore({
   reducer: {
     products: productsReducer,
+    searchParams: searchParamsReducer,
+    modal: modalReducer,
   },
 });
 

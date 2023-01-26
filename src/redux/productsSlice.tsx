@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { fetchAllProducts, fetchProductById } from './operations';
+import { fetchAllProducts } from './operations';
 
 export interface ProductsState {
   items:
@@ -15,7 +15,7 @@ export interface ProductsState {
     | [];
   isLoading: boolean;
   error: null | string;
-  page: number;
+
   total: number;
 }
 
@@ -42,34 +42,27 @@ const handleRejected = (state: ProductsState, action: PayloadAction<any>) => {
 const handleFulfilled = (state: ProductsState, action: PayloadAction<any>) => {
   state.isLoading = false;
   state.error = null;
-  state.page = action.payload.page;
+
   state.total = action.payload.total;
   if (action.payload.data.length) {
     state.items = action.payload.data;
   } else {
     state.items = [action.payload.data];
+
+    state.total = 1;
   }
 };
 
 const productsSlice = createSlice({
   name: 'products',
   initialState,
-  reducers: {
-    changePage(state, action) {
-      state.page += action.payload;
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(fetchAllProducts.pending, handlePending)
       .addCase(fetchAllProducts.fulfilled, handleFulfilled)
-      .addCase(fetchAllProducts.rejected, handleRejected)
-      .addCase(fetchProductById.pending, handlePending)
-      .addCase(fetchProductById.fulfilled, handleFulfilled)
-      .addCase(fetchProductById.rejected, handleRejected);
+      .addCase(fetchAllProducts.rejected, handleRejected);
   },
 });
 
 export const productsReducer = productsSlice.reducer;
-
-export const { changePage } = productsSlice.actions;
