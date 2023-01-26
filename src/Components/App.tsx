@@ -4,6 +4,7 @@ import { useSearchParams } from 'react-router-dom';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import Skeleton from '@mui/material/Skeleton';
+
 import { Filter } from './Filter/Filter';
 import { ProductsTable } from './Table/Table';
 import { Pagination } from './Pagination/Pagination';
